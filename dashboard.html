@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Botola Pro — Project Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #0d1127;
+  --navy2:   #141a35;
+  --navy3:   #1c2545;
+  --purple:  #7c3aed;
+  --purple2: #9d5cf6;
+  --pink:    #e040fb;
+  --pink2:   #f472b6;
+  --blue:    #2563eb;
+  --green:   #10b981;
+  --orange:  #f59e0b;
+  --red:     #ef4444;
+  --white:   #ffffff;
+  --gray:    #94a3b8;
+  --sidebar: 260px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);overflow:hidden;}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--navy2);
+  border-right:1px solid rgba(255,255,255,.06);
+  display:flex;flex-direction:column;
+  overflow-y:auto;padding:0 0 20px;
+}
+.sidebar::-webkit-scrollbar{display:none;}
+.sb-brand{
+  padding:24px 20px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  margin-bottom:8px;
+}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.sb-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.sb-title{font-size:15px;font-weight:800;letter-spacing:-.3px;}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+
+.sb-section-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:rgba(255,255,255,.28);
+  padding:12px 20px 4px;
+}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px 9px 20px;margin:1px 8px;border-radius:8px;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.55);
+  cursor:pointer;transition:.15s;
+}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);}
+.sb-item.active{
+  background:linear-gradient(135deg,rgba(124,58,237,.35),rgba(228,64,251,.15));
+  color:var(--white);border:1px solid rgba(124,58,237,.3);
+}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;}
+.sb-badge{
+  margin-left:auto;font-size:10px;font-weight:700;
+  padding:2px 7px;border-radius:20px;
+  background:rgba(16,185,129,.18);color:#34d399;
+}
+.sb-badge.orange{background:rgba(245,158,11,.18);color:#fbbf24;}
+.sb-badge.blue{background:rgba(37,99,235,.18);color:#60a5fa;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:58px;flex-shrink:0;
+  background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;padding:0 28px;gap:16px;
+}
+.topbar-title{font-size:16px;font-weight:700;}
+.topbar-sub{font-size:12px;color:var(--gray);margin-left:4px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.7);
+  font-size:12px;font-weight:600;cursor:pointer;transition:.15s;
+  text-decoration:none;font-family:'Inter',sans-serif;
+}
+.tb-btn:hover{background:rgba(255,255,255,.1);color:var(--white);}
+.tb-btn.primary{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border-color:transparent;color:var(--white);
+}
+.tb-btn svg{width:14px;height:14px;}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:28px;}
+.content::-webkit-scrollbar{width:6px;}
+.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
+
+/* ── SECTION VIEWS ── */
+.view{display:none;}
+.view.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.ov-card{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:20px;
+}
+.ov-card-icon{font-size:24px;margin-bottom:10px;}
+.ov-card-label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;}
+.ov-card-val{font-size:26px;font-weight:800;letter-spacing:-1px;}
+.ov-card-sub{font-size:12px;color:var(--gray);margin-top:4px;}
+
+/* ── SYSTEM OVERVIEW DIAGRAM ── */
+.overview-diagram{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:24px;margin-bottom:28px;
+}
+.diagram-title{font-size:14px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  align-items:center;gap:0;
+}
+.diag-node{
+  background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);
+  border-radius:10px;padding:14px 12px;text-align:center;
+}
+.diag-node.green{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.35);}
+.diag-node.blue{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35);}
+.diag-node.orange{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);}
+.diag-node-icon{font-size:22px;margin-bottom:6px;}
+.diag-node-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);}
+.diag-arrow{color:rgba(255,255,255,.25);font-size:20px;padding:0 4px;text-align:center;}
+
+/* ── GANTT ── */
+.gantt-wrap{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;overflow:hidden;margin-bottom:24px;
+}
+.gantt-header{
+  display:grid;grid-template-columns:240px 1fr;
+  background:rgba(0,0,0,.2);border-bottom:1px solid rgba(255,255,255,.06);
+}
+.gantt-col-label{
+  padding:12px 16px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--gray);
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.gantt-months{display:flex;padding:12px 0;}
+.gantt-month{
+  flex:1;text-align:center;font-size:11px;font-weight:600;
+  color:var(--gray);text-transform:uppercase;letter-spacing:.4px;
+}
+.gantt-row{
+  display:grid;grid-template-columns:240px 1fr;
+  border-top:1px solid rgba(255,255,255,.04);
+  transition:.15s;
+}
+.gantt-row:hover{background:rgba(255,255,255,.02);}
+.gantt-task-info{
+  padding:10px 16px;border-right:1px solid rgba(255,255,255,.06);
+  display:flex;flex-direction:column;gap:4px;
+}
+.gantt-task-name{font-size:13px;font-weight:600;}
+.gantt-task-meta{font-size:11px;color:var(--gray);}
+.gantt-bar-wrap{padding:10px 0;display:flex;align-items:center;position:relative;}
+.gantt-bg{
+  position:relative;width:100%;height:28px;
+  display:flex;align-items:center;
+}
+.gantt-bar{
+  height:22px;border-radius:6px;position:absolute;
+  display:flex;align-items:center;padding:0 10px;
+  font-size:11px;font-weight:700;white-space:nowrap;
+  transition:all .3s;overflow:hidden;
+}
+.gantt-bar.done{background:linear-gradient(90deg,#059669,#10b981);}
+.gantt-bar.progress{background:linear-gradient(90deg,var(--purple),var(--purple2));}
+.gantt-bar.upcoming{background:linear-gradient(90deg,rgba(255,255,255,.1),rgba(255,255,255,.15));color:rgba(255,255,255,.5);}
+
+/* ── PROGRESS BAR ── */
+.prog-bar-wrap{background:rgba(255,255,255,.07);border-radius:100px;height:6px;overflow:hidden;margin-top:4px;}
+.prog-bar{height:100%;border-radius:100px;transition:width .5s;}
+.prog-bar.green{background:linear-gradient(90deg,#059669,#10b981);}
+.prog-bar.purple{background:linear-gradient(90deg,var(--purple),var(--pink));}
+.prog-bar.orange{background:linear-gradient(90deg,#d97706,var(--orange));}
+.prog-bar.blue{background:linear-gradient(90deg,#1d4ed8,var(--blue));}
+
+/* ── TASK CARDS ── */
+.tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.task-card{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;overflow:hidden;transition:.2s;
+}
+.task-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px);}
+.task-card-header{
+  padding:16px 18px 14px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.task-card-icon{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.task-card-title{font-size:14px;font-weight:700;margin-bottom:3px;}
+.task-card-sub{font-size:12px;color:var(--gray);}
+.task-card-score{
+  margin-left:auto;font-size:13px;font-weight:800;
+  padding:3px 10px;border-radius:20px;flex-shrink:0;
+}
+.score-100{background:rgba(16,185,129,.2);color:#34d399;}
+.score-75{background:rgba(124,58,237,.2);color:#a78bfa;}
+.score-55{background:rgba(245,158,11,.2);color:#fbbf24;}
+.score-40{background:rgba(239,68,68,.2);color:#f87171;}
+.task-card-body{padding:14px 18px;}
+.task-prog-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;}
+.task-prog-label span:first-child{color:var(--gray);}
+.task-prog-label span:last-child{font-weight:700;}
+
+/* ── FOLDERS ── */
+.folder-section{margin-top:14px;}
+.folder-label{font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
+.file-list{display:flex;flex-direction:column;gap:6px;}
+.file-item{
+  display:flex;align-items:center;gap:8px;padding:7px 10px;
+  border-radius:7px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
+  font-size:12px;color:rgba(255,255,255,.75);
+  text-decoration:none;transition:.15s;cursor:pointer;
+}
+.file-item:hover{background:rgba(255,255,255,.08);color:var(--white);border-color:rgba(124,58,237,.3);}
+.file-item svg{width:14px;height:14px;flex-shrink:0;color:var(--gray);}
+.file-type{font-size:10px;margin-left:auto;color:var(--gray);}
+.file-item.link svg{color:var(--purple2);}
+.file-item.link{border-color:rgba(124,58,237,.15);}
+
+/* ── MODELS ── */
+.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.model-card{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;overflow:hidden;
+}
+.model-header{padding:20px;display:flex;gap:14px;align-items:flex-start;}
+.model-icon{
+  width:48px;height:48px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.model-title{font-size:16px;font-weight:800;margin-bottom:3px;}
+.model-status{font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;}
+.status-live{background:rgba(16,185,129,.2);color:#34d399;}
+.status-wip{background:rgba(245,158,11,.2);color:#fbbf24;}
+.status-planned{background:rgba(100,116,139,.2);color:#94a3b8;}
+.model-desc{font-size:12.5px;color:rgba(255,255,255,.65);line-height:1.6;}
+.model-body{padding:0 20px 20px;}
+.model-metric{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:12.5px;
+}
+.model-metric:last-child{border-bottom:none;}
+.model-metric-label{color:var(--gray);}
+.model-metric-val{font-weight:700;}
+.model-footer{
+  padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.model-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  text-decoration:none;border:none;transition:.15s;
+}
+.model-btn.primary{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  color:var(--white);
+}
+.model-btn.outline{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.75);
+}
+.model-btn:hover{opacity:.85;transform:translateY(-1px);}
+.model-placeholder{
+  padding:20px;text-align:center;
+  border-top:1px dashed rgba(255,255,255,.08);
+  color:rgba(255,255,255,.3);font-size:13px;
+}
+
+/* ── SLIDE / PRESENTATION MODE ── */
+.slide-viewer{position:relative;}
+.slide-controls{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.slide-nav-btn{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.15s;font-size:16px;
+}
+.slide-nav-btn:hover{background:rgba(255,255,255,.12);color:var(--white);}
+.slide-counter{font-size:13px;color:var(--gray);font-weight:600;}
+.slide-dots{display:flex;gap:6px;margin-left:auto;}
+.slide-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:.15s;}
+.slide-dot.active{background:var(--purple2);transform:scale(1.2);}
+.slide-frame{
+  background:var(--navy2);border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;overflow:hidden;min-height:480px;
+  display:flex;flex-direction:column;
+}
+.slide-inner{flex:1;padding:40px 48px;display:flex;align-items:center;}
+.slide-content{flex:1;}
+.slide-tag{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--pink2);margin-bottom:12px;
+}
+.slide-heading{
+  font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:16px;
+  background:linear-gradient(135deg,#fff 40%,var(--pink2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.slide-body{font-size:14.5px;color:rgba(255,255,255,.7);line-height:1.7;}
+.slide-bullets{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.slide-bullets li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14px;color:rgba(255,255,255,.75);line-height:1.5;
+}
+.slide-bullets li::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--purple2);flex-shrink:0;margin-top:7px;
+}
+.slide-image-side{
+  width:300px;flex-shrink:0;margin-left:40px;
+  background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);
+  border-radius:14px;padding:20px;min-height:300px;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;
+}
+.slide-footer{
+  padding:14px 40px;background:rgba(0,0,0,.2);
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:rgba(255,255,255,.35);
+}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.team-card{
+  background:var(--navy3);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:18px 12px;text-align:center;transition:.2s;
+}
+.team-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px);}
+.team-avatar{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;margin:0 auto 10px;
+}
+.team-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+.team-role{font-size:11px;color:var(--gray);}
+
+/* ── SECTION HEADER ── */
+.section-head{margin-bottom:24px;}
+.section-head h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
+.section-head p{font-size:13px;color:var(--gray);}
+
+/* ── RESPONSIVE FALLBACK ── */
+@media(max-width:1100px){
+  .overview-grid{grid-template-columns:repeat(2,1fr);}
+  .models-grid{grid-template-columns:1fr;}
+  .tasks-grid{grid-template-columns:1fr 1fr;}
+  .team-grid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <div class="sb-icon">⚽</div>
+      <div>
+        <div class="sb-title">Botola Pro</div>
+      </div>
+    </div>
+    <div class="sb-sub">Project Dashboard · 2026</div>
+  </div>
+
+  <div class="sb-section-label">Navigation</div>
+  <div class="sb-item active" onclick="show('overview',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Overview
+  </div>
+  <div class="sb-item" onclick="show('presentation',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Presentation
+  </div>
+  <div class="sb-item" onclick="show('gantt',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Gantt Chart
+  </div>
+  <div class="sb-item" onclick="show('tasks',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Tasks &amp; Files
+  </div>
+
+  <div class="sb-section-label" style="margin-top:8px;">AI Models</div>
+  <div class="sb-item" onclick="show('models',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    All Models
+    <span class="sb-badge">3</span>
+  </div>
+  <div class="sb-item" onclick="show('models',this);scrollToModel('chatbot-model')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    ChatBot
+    <span class="sb-badge">100%</span>
+  </div>
+  <div class="sb-item" onclick="show('models',this);scrollToModel('fraud-model')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Fraud Detection
+    <span class="sb-badge">100%</span>
+  </div>
+  <div class="sb-item" onclick="show('models',this);scrollToModel('sales-model')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Sales Prediction
+    <span class="sb-badge">100%</span>
+  </div>
+
+  <div class="sb-section-label" style="margin-top:8px;">Links</div>
+  <div class="sb-item" onclick="show('team',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    Team Members
+  </div>
+  <a class="sb-item" href="Prototype/prototype copy.html" target="_blank">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Open Prototype
+    <span class="sb-badge blue">↗</span>
+  </a>
+  <a class="sb-item" href="http://localhost:8000/chatbot-test" target="_blank">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    ChatBot Live
+    <span class="sb-badge">↗</span>
+  </a>
+</nav>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <span class="topbar-title" id="topbar-title">Overview</span>
+      <span class="topbar-sub" id="topbar-sub">— Botola Pro Ticketing Platform</span>
+    </div>
+    <div class="topbar-right">
+      <a href="Prototype/prototype copy.html" target="_blank" class="tb-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Prototype
+      </a>
+      <a href="http://localhost:8000/chatbot-test" target="_blank" class="tb-btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        ChatBot API
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ OVERVIEW VIEW ══ -->
+    <div id="view-overview" class="view active">
+      <div class="section-head">
+        <h2>Project Overview</h2>
+        <p>Botola Pro Smart Ticketing Platform — Secure · AI-Driven · Fair</p>
+      </div>
+
+      <div class="overview-grid">
+        <div class="ov-card">
+          <div class="ov-card-icon">🎟️</div>
+          <div class="ov-card-label">Platform</div>
+          <div class="ov-card-val" style="font-size:18px;font-weight:800;">Botola Pro</div>
+          <div class="ov-card-sub">Ticketing · Resale · AI</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon">🤖</div>
+          <div class="ov-card-label">AI Models Built</div>
+          <div class="ov-card-val" style="color:#34d399;">3 / 3</div>
+          <div class="ov-card-sub">ChatBot · Fraud · Sales Prediction</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon">👥</div>
+          <div class="ov-card-label">Team Size</div>
+          <div class="ov-card-val">11</div>
+          <div class="ov-card-sub">Members</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon">📅</div>
+          <div class="ov-card-label">Overall Progress</div>
+          <div class="ov-card-val" style="color:#34d399;">88%</div>
+          <div class="ov-card-sub">On track</div>
+        </div>
+      </div>
+
+      <!-- System diagram -->
+      <div class="overview-diagram">
+        <div class="diagram-title">
+          <span style="font-size:18px;">🗺️</span> System Overview
+          <span style="font-size:12px;color:var(--gray);font-weight:400;margin-left:4px;">— Actors interact with a single web application; models run as modular services</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+          <div class="diag-node">
+            <div class="diag-node-icon">👤</div>
+            <div class="diag-node-label">Admin / Buyer / Seller</div>
+          </div>
+          <div class="diag-node blue">
+            <div class="diag-node-icon">💻</div>
+            <div class="diag-node-label">Platform Prototype</div>
+          </div>
+          <div class="diag-node">
+            <div class="diag-node-icon">🗄️</div>
+            <div class="diag-node-label">Data Collection &amp; Cleaning</div>
+          </div>
+          <div class="diag-node green">
+            <div class="diag-node-icon">🛡️</div>
+            <div class="diag-node-label">Secure Backup Server</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div class="diag-node orange">
+            <div class="diag-node-icon">📈</div>
+            <div class="diag-node-label">Sales Prediction<br><small style="color:var(--gray)">XGBoost · R²=0.91</small></div>
+          </div>
+          <div class="diag-node">
+            <div class="diag-node-icon">🛡️</div>
+            <div class="diag-node-label">Fraud Detection<br><small style="color:var(--gray)">In-line resale filter</small></div>
+          </div>
+          <div class="diag-node green">
+            <div class="diag-node-icon">💬</div>
+            <div class="diag-node-label">ChatBot AI<br><small style="color:var(--gray)">RAG + Mistral · Live</small></div>
+          </div>
+          <div class="diag-node blue">
+            <div class="diag-node-icon">🚀</div>
+            <div class="diag-node-label">Deployment<br><small style="color:var(--gray)">Controlled env.</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DB schema summary -->
+      <div class="overview-diagram">
+        <div class="diagram-title"><span style="font-size:18px;">🗃️</span> Database Structure — smart_ticket (PostgreSQL)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+          <div style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:10px;padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Core Schema</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);display:flex;flex-direction:column;gap:5px;">
+              <span>📅 events</span><span>🎟️ tickets</span><span>👥 users</span><span>⚽ teams</span><span>🏟️ stadium_zones</span><span>⚡ rivalries</span>
+            </div>
+          </div>
+          <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:#34d399;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Demand Schema</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);display:flex;flex-direction:column;gap:5px;">
+              <span>📊 demand_snapshots</span><span>👥 attendance_records</span><span>📈 demand_predictions</span>
+            </div>
+          </div>
+          <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:#f87171;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Fraud Schema</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);display:flex;flex-direction:column;gap:5px;">
+              <span>👤 sellers</span><span>📋 listings</span><span>🛡️ fraud_scores</span>
+            </div>
+          </div>
+          <div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);border-radius:10px;padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Chatbot Schema</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);display:flex;flex-direction:column;gap:5px;">
+              <span>📄 chatbot_documents</span><span>🧩 chatbot_chunks</span><span>💬 chat_sessions</span><span>✉️ chat_messages</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PRESENTATION VIEW ══ -->
+    <div id="view-presentation" class="view">
+      <div class="section-head">
+        <h2>Presentation Mode</h2>
+        <p>Navigate through the project slides</p>
+      </div>
+      <div class="slide-viewer">
+        <div class="slide-controls">
+          <button class="slide-nav-btn" onclick="prevSlide()">‹</button>
+          <span class="slide-counter" id="slide-counter">Slide 1 / 6</span>
+          <button class="slide-nav-btn" onclick="nextSlide()">›</button>
+          <div class="slide-dots" id="slide-dots"></div>
+          <a href="Prototype/prototype copy.html" target="_blank" class="tb-btn" style="margin-left:8px;">Open Prototype ↗</a>
+          <a href="http://localhost:8000/chatbot-test" target="_blank" class="tb-btn primary">ChatBot Live ↗</a>
+        </div>
+        <div class="slide-frame">
+          <div class="slide-inner" id="slide-inner"></div>
+          <div class="slide-footer">
+            <span>Botola Pro Ticketing Platform</span>
+            <span id="slide-footer-num">1 / 6</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GANTT VIEW ══ -->
+    <div id="view-gantt" class="view">
+      <div class="section-head">
+        <h2>Tableau de Gantt</h2>
+        <p>Project timeline · Feb 2026 – Jun 2026</p>
+      </div>
+      <div class="gantt-wrap">
+        <div class="gantt-header">
+          <div class="gantt-col-label">Task</div>
+          <div class="gantt-months">
+            <div class="gantt-month">Feb</div>
+            <div class="gantt-month">Mar</div>
+            <div class="gantt-month">Apr</div>
+            <div class="gantt-month">May</div>
+            <div class="gantt-month">Jun</div>
+          </div>
+        </div>
+        <!-- Each bar: left% offset into the 5-month grid, width% of 5 months -->
+        <div id="gantt-body"></div>
+      </div>
+    </div>
+
+    <!-- ══ TASKS VIEW ══ -->
+    <div id="view-tasks" class="view">
+      <div class="section-head">
+        <h2>Tasks &amp; Files</h2>
+        <p>Progress per module with attached documents, notebooks &amp; links</p>
+      </div>
+      <div class="tasks-grid" id="tasks-grid"></div>
+    </div>
+
+    <!-- ══ MODELS VIEW ══ -->
+    <div id="view-models" class="view">
+      <div class="section-head">
+        <h2>AI Models</h2>
+        <p>Three modular AI services powering the Botola Pro platform</p>
+      </div>
+      <div class="models-grid" id="models-grid"></div>
+    </div>
+
+    <!-- ══ TEAM VIEW ══ -->
+    <div id="view-team" class="view">
+      <div class="section-head">
+        <h2>Team Members</h2>
+        <p>10 engineers &amp; data scientists building Botola Pro</p>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  VIEW ROUTER
+// ═══════════════════════════════════════════════
+const titles = {
+  overview:'Overview', presentation:'Presentation', gantt:'Gantt Chart',
+  tasks:'Tasks & Files', models:'AI Models', team:'Team Members'
+};
+function show(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[id] || id;
+  if (id === 'presentation') initSlides();
+  if (id === 'gantt') renderGantt();
+  if (id === 'tasks') renderTasks();
+  if (id === 'models') renderModels();
+  if (id === 'team') renderTeam();
+}
+function scrollToModel(id) {
+  setTimeout(() => { const el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
+}
+
+// ═══════════════════════════════════════════════
+//  SLIDES DATA
+// ═══════════════════════════════════════════════
+const slides = [
+  {
+    tag:'Introduction',
+    heading:'Botola Pro\nTicketing Platform',
+    body:'Smart · Secure · Fair',
+    bullets:[
+      'Fraud & scalping create unfair access to matches.',
+      'Inefficient sales channels and manual resale processes.',
+      'Limited operational insights for demand and allocation.',
+      '<strong style="color:#f472b6">Goal:</strong> A secure, transparent platform combining UX and AI to protect fans and optimise sales.'
+    ],
+    icon:'⚽', iconColor:'linear-gradient(135deg,#7c3aed,#e040fb)'
+  },
+  {
+    tag:'System Overview',
+    heading:'How It Works',
+    body:'Actors interact with a single web application; models run as modular services supporting transactions, support, and forecasting.',
+    bullets:[
+      'Platform Prototype → Data Collection → AI Models',
+      'ChatBot: RAG + Mistral LLM (static FAQ + live DB)',
+      'Fraud Detection: flags risky sellers in resale flow',
+      'Sales Prediction: XGBoost demand forecasting (R²=0.91)'
+    ],
+    icon:'🗺️', iconColor:'linear-gradient(135deg,#1d4ed8,#7c3aed)'
+  },
+  {
+    tag:'AI Model 1 · Live',
+    heading:'ChatBot AI Module',
+    body:'Full Architecture: Intent classifier → RAG search + Real-time DB → LLM (Mistral) → Action router',
+    bullets:[
+      'Supports AR · FR · EN · ES — text and push replies',
+      'Static: Vector embed → FAISS search (stadium rules, FAQ)',
+      'Dynamic: Direct API call → live DB (ticket status, seats)',
+      'Action Router: in-app reply / push notification / map / alert'
+    ],
+    icon:'💬', iconColor:'linear-gradient(135deg,#059669,#10b981)',
+    link:{label:'Open ChatBot Live', href:'http://localhost:8000/chatbot-test'}
+  },
+  {
+    tag:'AI Model 2 · Complete — 100%',
+    heading:'Fraud Detection',
+    body:'Role: flag risky sellers and suspicious transactions in the resale flow.',
+    bullets:[
+      'Inputs: seller history, transaction pattern, network signals, price anomaly',
+      'Output: confidence score + explainability tags (behaviour, velocity, location)',
+      'Action: auto-block or require manual review based on threshold',
+      'Model runs in-line during resale listing creation to prevent scams'
+    ],
+    icon:'🛡️', iconColor:'linear-gradient(135deg,#dc2626,#f59e0b)'
+  },
+  {
+    tag:'AI Model 3 · Complete — 100%',
+    heading:'Ticket Sales Prediction',
+    body:'XGBoost — eXtreme Gradient Boosting — 14 features, weekly retrained.',
+    bullets:[
+      'Features: event_type, team ranks, attendance history, rivalry signals, capacity',
+      'Output: expected sales count + confidence band on the ops dashboard',
+      'Training results: R²=0.91 · MAE=142 tickets · RMSE=198 · 5-fold CV',
+      'Usage: pricing strategy, distributor allocation, staffing planning'
+    ],
+    icon:'📈', iconColor:'linear-gradient(135deg,#d97706,#f59e0b)'
+  },
+  {
+    tag:'Conclusion',
+    heading:'All 3 Models Complete',
+    body:'Secure, scalable ticketing platform built for Botola Pro — all AI modules delivered.',
+    bullets:[
+      'ChatBot: RAG + Mistral LLM — live, multilingual, &lt;1s response',
+      'Fraud Detection: confidence score + explainability tags — complete',
+      'Sales Prediction: XGBoost R²=0.91, 14 features — complete',
+      'Next: pilot with selected matches, refine thresholds, measure KPIs'
+    ],
+    icon:'🚀', iconColor:'linear-gradient(135deg,#7c3aed,#2563eb)',
+    link:{label:'View Platform Prototype', href:'Prototype/prototype copy.html'}
+  }
+];
+
+let currentSlide = 0;
+function initSlides() {
+  renderSlide(currentSlide);
+  const dots = document.getElementById('slide-dots');
+  dots.innerHTML = slides.map((_, i) =>
+    `<div class="slide-dot ${i===currentSlide?'active':''}" onclick="goSlide(${i})"></div>`
+  ).join('');
+}
+function renderSlide(i) {
+  const s = slides[i];
+  document.getElementById('slide-counter').textContent = `Slide ${i+1} / ${slides.length}`;
+  document.getElementById('slide-footer-num').textContent = `${i+1} / ${slides.length}`;
+  const inner = document.getElementById('slide-inner');
+  inner.innerHTML = `
+    <div class="slide-content">
+      <div class="slide-tag">${s.tag}</div>
+      <div class="slide-heading">${s.heading.replace('\n','<br>')}</div>
+      <div class="slide-body">${s.body}</div>
+      <ul class="slide-bullets">${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+      ${s.link ? `<a href="${s.link.href}" target="_blank" class="model-btn primary" style="margin-top:20px;display:inline-flex;">${s.link.label} ↗</a>` : ''}
+    </div>
+    <div class="slide-image-side">
+      <div style="width:70px;height:70px;border-radius:20px;background:${s.iconColor};display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px;">${s.icon}</div>
+      <div style="font-size:13px;font-weight:700;text-align:center;color:rgba(255,255,255,.7);">${s.tag}</div>
+    </div>`;
+  document.querySelectorAll('.slide-dot').forEach((d,idx) => d.classList.toggle('active', idx===i));
+}
+function nextSlide() { currentSlide = (currentSlide+1)%slides.length; renderSlide(currentSlide); }
+function prevSlide() { currentSlide = (currentSlide-1+slides.length)%slides.length; renderSlide(currentSlide); }
+function goSlide(i) { currentSlide = i; renderSlide(i); }
+
+// ═══════════════════════════════════════════════
+//  GANTT DATA
+// ═══════════════════════════════════════════════
+const ganttTasks = [
+  {name:'Database Design & Schema',   start:0,  end:18, pct:100, color:'done'},
+  {name:'Data Collection & Cleaning', start:5,  end:30, pct:100, color:'done'},
+  {name:'ChatBot AI Module',          start:18, end:60, pct:100, color:'done'},
+  {name:'Fraud Detection Model',      start:25, end:75, pct:100, color:'done'},
+  {name:'Sales Prediction (XGBoost)', start:30, end:80, pct:100, color:'done'},
+  {name:'Platform Prototype',         start:10, end:85, pct:90,  color:'progress'},
+  {name:'Testing & QA',               start:55, end:90, pct:65,  color:'progress'},
+  {name:'Deployment Preparation',     start:75, end:100,pct:30,  color:'upcoming'},
+];
+function renderGantt() {
+  const body = document.getElementById('gantt-body');
+  body.innerHTML = ganttTasks.map(t => `
+    <div class="gantt-row">
+      <div class="gantt-task-info">
+        <div class="gantt-task-name">${t.name}</div>
+        <div class="gantt-task-meta">${t.pct}% complete</div>
+        <div class="prog-bar-wrap" style="margin-top:4px;">
+          <div class="prog-bar ${t.pct===100?'green':t.pct>=70?'blue':t.pct>=50?'purple':'orange'}" style="width:${t.pct}%"></div>
+        </div>
+      </div>
+      <div class="gantt-bar-wrap" style="padding:10px 10px;">
+        <div class="gantt-bg">
+          <div class="gantt-bar ${t.color}" style="left:${t.start}%;width:${t.end-t.start}%;">
+            ${t.pct}%
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  TASKS DATA
+// ═══════════════════════════════════════════════
+const tasksData = [
+  {
+    title:'Database Design & Schema',
+    sub:'PostgreSQL · smart_ticket',
+    icon:'🗃️', iconBg:'rgba(37,99,235,.2)',
+    score:100, scoreClass:'score-100',
+    progClass:'green', pct:100,
+    files:[
+      {name:'schema_design.sql',    type:'SQL',  icon:'doc'},
+      {name:'ERD_diagram.pdf',      type:'PDF',  icon:'doc'},
+      {name:'seed_database.py',     type:'PY',   icon:'doc'},
+      {name:'DB Documentation',     type:'Link', icon:'link', href:'ChatBot_Botola/scripts/seed_database.py'},
+    ]
+  },
+  {
+    title:'ChatBot AI Module',
+    sub:'RAG + Mistral LLM',
+    icon:'💬', iconBg:'rgba(16,185,129,.2)',
+    score:100, scoreClass:'score-100',
+    progClass:'green', pct:100,
+    files:[
+      {name:'main.py — FastAPI server',      type:'PY',   icon:'doc', href:'ChatBot_Botola/main.py'},
+      {name:'chat_orchestrator.py',          type:'PY',   icon:'doc', href:'ChatBot_Botola/src/chat_orchestrator.py'},
+      {name:'rag_engine.py',                 type:'PY',   icon:'doc', href:'ChatBot_Botola/src/rag_engine.py'},
+      {name:'ChatBot Live Demo',             type:'Link', icon:'link', href:'http://localhost:8000/chatbot-test'},
+      {name:'Platform Prototype (ChatBot)',  type:'Link', icon:'link', href:'Prototype/prototype copy.html'},
+    ]
+  },
+  {
+    title:'Platform Prototype',
+    sub:'Buyer · Seller · Admin',
+    icon:'💻', iconBg:'rgba(124,58,237,.2)',
+    score:85, scoreClass:'score-75',
+    progClass:'purple', pct:85,
+    files:[
+      {name:'prototype copy.html', type:'HTML', icon:'doc', href:'Prototype/prototype copy.html'},
+      {name:'Open Prototype',      type:'Link', icon:'link', href:'Prototype/prototype copy.html'},
+    ]
+  },
+  {
+    title:'Fraud Detection Model',
+    sub:'In-line resale filter',
+    icon:'🛡️', iconBg:'rgba(239,68,68,.15)',
+    score:100, scoreClass:'score-100',
+    progClass:'green', pct:100,
+    files:[
+      {name:'fraud_schema.sql',           type:'SQL',  icon:'doc'},
+      {name:'fraud_model_notebook.ipynb', type:'IPYNB',icon:'doc'},
+      {name:'training_results.csv',       type:'CSV',  icon:'doc'},
+    ]
+  },
+  {
+    title:'Sales Prediction (XGBoost)',
+    sub:'R²=0.91 · 14 features',
+    icon:'📈', iconBg:'rgba(245,158,11,.15)',
+    score:100, scoreClass:'score-100',
+    progClass:'green', pct:100,
+    files:[
+      {name:'xgboost_model.pkl',          type:'PKL',  icon:'doc'},
+      {name:'features_documentation.md',  type:'MD',   icon:'doc'},
+      {name:'training_metrics.json',      type:'JSON', icon:'doc'},
+      {name:'demand_notebook.ipynb',      type:'IPYNB',icon:'doc'},
+    ]
+  },
+  {
+    title:'Testing & Deployment',
+    sub:'QA · Docker · CI',
+    icon:'🚀', iconBg:'rgba(37,99,235,.15)',
+    score:40, scoreClass:'score-40',
+    progClass:'orange', pct:40,
+    files:[
+      {name:'docker-compose.yml',    type:'YAML', icon:'doc', href:'ChatBot_Botola/docker-compose.yml'},
+      {name:'Dockerfile',            type:'DOCKER',icon:'doc', href:'ChatBot_Botola/Dockerfile'},
+      {name:'requirements.txt',      type:'TXT',  icon:'doc', href:'ChatBot_Botola/requirements.txt'},
+      {name:'README.md',             type:'MD',   icon:'doc', href:'ChatBot_Botola/README.md'},
+    ]
+  },
+];
+
+function renderTasks() {
+  document.getElementById('tasks-grid').innerHTML = tasksData.map(t => `
+    <div class="task-card">
+      <div class="task-card-header">
+        <div class="task-card-icon" style="background:${t.iconBg};">${t.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="task-card-title">${t.title}</div>
+          <div class="task-card-sub">${t.sub}</div>
+        </div>
+        <div class="task-card-score ${t.scoreClass}">${t.score}%</div>
+      </div>
+      <div class="task-card-body">
+        <div class="task-prog-label">
+          <span>Completion</span><span>${t.pct}%</span>
+        </div>
+        <div class="prog-bar-wrap">
+          <div class="prog-bar ${t.progClass}" style="width:${t.pct}%"></div>
+        </div>
+        <div class="folder-section">
+          <div class="folder-label">📁 Files &amp; Links</div>
+          <div class="file-list">
+            ${t.files.map(f => {
+              const isLink = f.icon === 'link';
+              const tag = f.href ? `<a class="file-item ${isLink?'link':''}" href="${f.href}" target="_blank">` : `<div class="file-item">`;
+              const close = f.href ? '</a>' : '</div>';
+              return `${tag}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  ${isLink
+                    ? '<path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>'
+                    : '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>'}
+                </svg>
+                ${f.name}
+                <span class="file-type">${f.type}</span>
+              ${close}`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  MODELS DATA
+// ═══════════════════════════════════════════════
+function renderModels() {
+  document.getElementById('models-grid').innerHTML = `
+    <!-- ChatBot -->
+    <div class="model-card" id="chatbot-model">
+      <div class="model-header">
+        <div class="model-icon" style="background:linear-gradient(135deg,#059669,#10b981);">💬</div>
+        <div>
+          <div class="model-title">ChatBot AI</div>
+          <div class="model-status status-live">● Live</div>
+          <div class="model-desc">24/7 AI assistant supporting tickets, venues &amp; security across AR · FR · EN · ES. Uses hybrid RAG + live DB + Mistral LLM.</div>
+        </div>
+      </div>
+      <div class="model-body">
+        <div class="task-prog-label"><span>Completion</span><span>100%</span></div>
+        <div class="prog-bar-wrap"><div class="prog-bar green" style="width:100%"></div></div>
+        <div style="margin-top:16px;">
+          <div class="model-metric"><span class="model-metric-label">Architecture</span><span class="model-metric-val">RAG + Mistral LLM</span></div>
+          <div class="model-metric"><span class="model-metric-label">Intent Routes</span><span class="model-metric-val">Static (FAISS) + Dynamic (DB)</span></div>
+          <div class="model-metric"><span class="model-metric-label">Languages</span><span class="model-metric-val">AR · FR · EN · ES</span></div>
+          <div class="model-metric"><span class="model-metric-label">Avg Response</span><span class="model-metric-val">&lt; 1s</span></div>
+          <div class="model-metric"><span class="model-metric-label">Outputs</span><span class="model-metric-val">Chat · Push · Map · Admin Alert</span></div>
+        </div>
+      </div>
+      <div class="model-footer">
+        <a href="http://localhost:8000/chatbot-test" target="_blank" class="model-btn primary">Live Demo ↗</a>
+        <a href="http://localhost:8000/api/health" target="_blank" class="model-btn outline">Health Check</a>
+        <a href="ChatBot_Botola/main.py" target="_blank" class="model-btn outline">Source</a>
+      </div>
+    </div>
+
+    <!-- Fraud Detection -->
+    <div class="model-card" id="fraud-model">
+      <div class="model-header">
+        <div class="model-icon" style="background:linear-gradient(135deg,#dc2626,#f59e0b);">🛡️</div>
+        <div>
+          <div class="model-title">Fraud Detection</div>
+          <div class="model-status status-live">● Complete</div>
+          <div class="model-desc">Flags risky sellers and suspicious transactions in the resale flow. Runs in-line during listing creation to prevent scams.</div>
+        </div>
+      </div>
+      <div class="model-body">
+        <div class="task-prog-label"><span>Completion</span><span>100%</span></div>
+        <div class="prog-bar-wrap"><div class="prog-bar green" style="width:100%"></div></div>
+        <div style="margin-top:16px;">
+          <div class="model-metric"><span class="model-metric-label">Inputs</span><span class="model-metric-val">Seller history · Transaction pattern</span></div>
+          <div class="model-metric"><span class="model-metric-label">Network signals</span><span class="model-metric-val">Price anomaly · Velocity</span></div>
+          <div class="model-metric"><span class="model-metric-label">Output</span><span class="model-metric-val">Confidence score + explainability tags</span></div>
+          <div class="model-metric"><span class="model-metric-label">Action</span><span class="model-metric-val">Auto-block or manual review</span></div>
+          <div class="model-metric"><span class="model-metric-label">Retrain</span><span class="model-metric-val">Nightly on new signals</span></div>
+        </div>
+      </div>
+      <div class="model-footer">
+        <button class="model-btn primary" onclick="alert('Model complete — not deployed on this machine.')">View Model</button>
+      </div>
+    </div>
+
+    <!-- Sales Prediction -->
+    <div class="model-card" id="sales-model">
+      <div class="model-header">
+        <div class="model-icon" style="background:linear-gradient(135deg,#d97706,#f59e0b);">📈</div>
+        <div>
+          <div class="model-title">Ticket Sales Prediction</div>
+          <div class="model-status status-live">● Complete</div>
+          <div class="model-desc">XGBoost demand forecasting across 14 features. Internal model driving pricing strategy and distributor allocation.</div>
+        </div>
+      </div>
+      <div class="model-body">
+        <div class="task-prog-label"><span>Completion</span><span>100%</span></div>
+        <div class="prog-bar-wrap"><div class="prog-bar green" style="width:100%"></div></div>
+        <div style="margin-top:16px;">
+          <div class="model-metric"><span class="model-metric-label">Algorithm</span><span class="model-metric-val">XGBoost (eXtreme Gradient Boosting)</span></div>
+          <div class="model-metric"><span class="model-metric-label">Features</span><span class="model-metric-val">14 — ranks, rivalry, fanbase, capacity</span></div>
+          <div class="model-metric"><span class="model-metric-label" style="color:#34d399">R² Score</span><span class="model-metric-val" style="color:#34d399">0.91</span></div>
+          <div class="model-metric"><span class="model-metric-label">MAE</span><span class="model-metric-val">142 tickets avg error</span></div>
+          <div class="model-metric"><span class="model-metric-label">RMSE</span><span class="model-metric-val">198 tickets root error</span></div>
+          <div class="model-metric"><span class="model-metric-label">Cross-Validation</span><span class="model-metric-val">5-fold CV</span></div>
+          <div class="model-metric"><span class="model-metric-label">Retrain cadence</span><span class="model-metric-val">Weekly on new event data</span></div>
+        </div>
+      </div>
+      <div class="model-footer">
+        <button class="model-btn primary" onclick="alert('Model complete — not deployed on this machine.')">View Model</button>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  TEAM DATA
+// ═══════════════════════════════════════════════
+const teamData = [
+  {name:'Fatima-Zahrae El Khalfi', initials:'FK', color:'linear-gradient(135deg,#7c3aed,#e040fb)'},
+  {name:'Hajar Taghi',             initials:'HT', color:'linear-gradient(135deg,#2563eb,#7c3aed)'},
+  {name:'Yasmine El Alaoui',       initials:'YA', color:'linear-gradient(135deg,#059669,#2563eb)'},
+  {name:'Salma Souissi',           initials:'SS', color:'linear-gradient(135deg,#d97706,#e040fb)'},
+  {name:'Hiba Khayrane',           initials:'HK', color:'linear-gradient(135deg,#dc2626,#d97706)'},
+  {name:'Abderrahmane El Bouk',    initials:'AB', color:'linear-gradient(135deg,#7c3aed,#1d4ed8)'},
+  {name:'Ayyoub Amazal',           initials:'AA', color:'linear-gradient(135deg,#059669,#d97706)'},
+  {name:'Yassir Lagnaoui',         initials:'YL', color:'linear-gradient(135deg,#1d4ed8,#059669)'},
+  {name:'Yussef Ech-chahlaoui',    initials:'YE', color:'linear-gradient(135deg,#dc2626,#7c3aed)'},
+  {name:'Abdessamad Ait-Brahim',   initials:'AA', color:'linear-gradient(135deg,#d97706,#2563eb)'},
+  {name:'Zouhair Fezzaz',          initials:'ZF', color:'linear-gradient(135deg,#7c3aed,#059669)'},
+];
+
+function renderTeam() {
+  document.getElementById('team-grid').innerHTML = teamData.map(m => `
+    <div class="team-card">
+      <div class="team-avatar" style="background:${m.color};">${m.initials}</div>
+      <div class="team-name">${m.name}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+renderGantt();
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# Python virtual environment — NEVER commit this
+ChatBot_Botola/venv/
+venv/
+
+# AI model cache — too large for GitHub (bundled separately in zip)
+ChatBot_Botola/models_cache/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables — contains API keys, never commit
+# (set these in Railway dashboard instead)
+ChatBot_Botola/.env
+
+# Local database
+ChatBot_Botola/data/botola_pro.db
+
+# Logs
+*.log
+*.log.err
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pre-built wheels (large)
+*.whl

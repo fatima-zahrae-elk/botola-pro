@@ -1,0 +1,31 @@
+# Web framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.0
+httpx==0.26.0
+python-dotenv==1.0.0
+
+# ML / Embeddings
+sentence-transformers==2.3.0
+faiss-cpu==1.7.4
+numpy==1.26.0
+
+# Document processing
+PyPDF2==3.0.1
+python-docx==1.1.0
+
+# Database
+sqlalchemy==2.0.25
+
+# Language detection
+langdetect==1.0.9
+
+# Memory / Cache
+redis==5.0.1
+
+# Hybrid search
+rank-bm25==0.2.2
+
+# Utilities
+# (no additional utilities needed)
