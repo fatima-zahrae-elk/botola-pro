@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: botola-pro-api
+    env: python
+    buildCommand: pip install -r ChatBot_Botola/requirements.txt
+    startCommand: cd ChatBot_Botola && uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: LLM_PROVIDER
+        value: mistral
+      - key: MISTRAL_MODEL
+        value: mistral-medium
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://fatima-zahrae-elk.github.io,http://localhost:5500,http://127.0.0.1:5500,http://localhost:8000,http://127.0.0.1:8000
+      - key: REDIS_URL
+        value: ""
