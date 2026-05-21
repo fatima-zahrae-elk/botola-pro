@@ -79,9 +79,9 @@ class HybridRetriever:
         ]
 
         if not faiss_results:
-            logger.info("No FAISS results above threshold",
+            logger.info("No FAISS results above threshold — using BM25-only fallback",
                         extra={"threshold": min_score, "query": query[:80]})
-            return []
+            return self._bm25_only_search(query, k)
 
         # ---- BM25 keyword search ----
         bm25_ranking: Dict[str, int] = {}  # chunk_id → BM25 rank
@@ -122,5 +122,28 @@ class HybridRetriever:
             "query": query[:80],
             "faiss_candidates": len(faiss_results),
             "final_results": len(results),
+        })
+        return results
+
+    def _bm25_only_search(self, query: str, k: int) -> List[Dict]:
+        """Pure BM25 search — used when FAISS is disabled or returns no results."""
+        if self.bm25 is None:
+            logger.warning("BM25 not available — cannot retrieve context")
+            return []
+
+        tokens = self._tokenize(query)
+        scores = self.bm25.get_scores(tokens)
+        top_indices = np.argsort(scores)[::-1][:k]
+
+        results = []
+        for idx in top_indices:
+            if scores[idx] > 0:
+                chunk = dict(self.chunks[idx])
+                chunk["bm25_score"] = round(float(scores[idx]), 4)
+                results.append(chunk)
+
+        logger.info("BM25-only search complete", extra={
+            "query": query[:80],
+            "results": len(results),
         })
         return results
