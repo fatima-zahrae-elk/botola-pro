@@ -1,3 +1,13 @@
+---
+title: Botola Pro Chatbot API
+emoji: ⚽
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Botola Pro — Ticketing Platform
 
 Smart · Secure · Fair — AI-powered ticket platform for Botola Pro.

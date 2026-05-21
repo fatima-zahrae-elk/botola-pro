@@ -5074,10 +5074,10 @@
       setTimeout(() => { renderBuyer('tickets'); }, 2800);
     }
 
-    // Auto-detect: localhost → local server, anywhere else → ngrok public URL
+    // Auto-detect: localhost → local server, anywhere else → HuggingFace Space
     const CHATBOT_API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:8000/api/chat'
-      : 'https://illicitly-flagpole-dividable.ngrok-free.dev/api/chat';
+      : 'https://fatima-zahrae-elk-botola-pro-api.hf.space/api/chat';
     const CHAT_SESSION = 'buyer_' + Math.random().toString(36).substr(2, 9);
     const SELLER_SESSION = 'seller_' + Math.random().toString(36).substr(2, 9);
 
