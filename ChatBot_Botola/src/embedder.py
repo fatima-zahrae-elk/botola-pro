@@ -25,7 +25,7 @@ class Embedder:
     """
 
     def __init__(self, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"):
-        self.dimension = 768   # Must match the pre-built FAISS index
+        self.dimension = 384   # paraphrase-multilingual-MiniLM-L12-v2 outputs 384 dims
         self.model = None
 
         if os.getenv("USE_LOCAL_EMBEDDER", "false").lower() == "true":
@@ -44,8 +44,8 @@ class Embedder:
         """Embed a list of texts."""
         if self.model is not None:
             return self.model.encode(texts, normalize_embeddings=True)
-        # Zero vectors → FAISS score = 0 → min_score filter removes them → BM25 fallback
-        return np.zeros((len(texts), self.dimension), dtype=np.float32)
+        # Zero vectors → FAISS cosine score = 0 → filtered by min_score → BM25 fallback kicks in
+        return np.zeros((len(texts), self.dimension), dtype=np.float32)  # shape: (n, 384)
 
     def embed_query(self, text: str) -> np.ndarray:
         """Embed a single query."""

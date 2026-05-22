@@ -44,11 +44,28 @@ echo   Then open the links above in your browser.
 echo  ============================================================
 echo.
 
-REM ── Open browser after short delay ────────────────────────────
+REM ── Wait for chatbot to load, then open browser ───────────────
+echo.
+echo  Waiting for ChatBot AI to load (this takes ~45 seconds)...
+echo.
+timeout /t 10 /nobreak >nul
+echo  35 seconds remaining...
+timeout /t 10 /nobreak >nul
+echo  25 seconds remaining...
+timeout /t 10 /nobreak >nul
+echo  15 seconds remaining...
+timeout /t 10 /nobreak >nul
+echo  5 seconds remaining...
 timeout /t 5 /nobreak >nul
+
+echo.
+echo  ============================================================
+echo   Ready! Opening browser...
+echo  ============================================================
+echo.
 start "" "http://localhost:5500/dashboard.html"
 
-echo  Browser opened. Keep this window and the two server
-echo  windows open while using the platform.
+echo  Keep this window and the two server windows open.
+echo  Close them when you are done.
 echo.
 pause

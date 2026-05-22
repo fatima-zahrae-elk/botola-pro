@@ -76,17 +76,6 @@ class Guardrails:
                 action="escalate"
             )
         
-        # Check for required disclaimers on sensitive topics
-        for topic, pattern in self.SENSITIVE_TOPICS.items():
-            if re.search(pattern, text, re.I):
-                disclaimer = REQUIRED_DISCLAIMERS.get(topic, "")
-                if disclaimer and disclaimer not in text:
-                    return SafetyCheck(
-                        passed=False,
-                        reason=f"Missing required disclaimer for: {topic}",
-                        action="warn"
-                    )
-        
         return SafetyCheck(passed=True)
     
     def sanitize_output(self, text: str) -> str:

@@ -58,15 +58,12 @@ class HybridRetriever:
                min_score: float = 0.35) -> List[Dict]:
         """
         Hybrid search: BM25 + FAISS merged via RRF.
-
-        Args:
-            query:     User query (optionally rewritten with history context).
-            k:         Number of results to return after fusion.
-            min_score: Minimum FAISS cosine similarity to include a chunk.
-
-        Returns:
-            Up to `k` chunks sorted by descending RRF score.
+        Falls back to BM25-only when no embedding model is loaded.
         """
+        # ---- BM25-only mode (no embedding model loaded) ----
+        if getattr(self.embedder, 'model', None) is None:
+            return self._bm25_only_search(query, k)
+
         # ---- FAISS semantic search (retrieve 2× for reranking headroom) ----
         query_vec = self.embedder.embed_query(query)
         faiss_chunks, faiss_scores = self.vector_store.search(query_vec, k=k * 2)
